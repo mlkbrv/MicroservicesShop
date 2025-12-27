@@ -59,10 +59,17 @@ TEMPLATES = [
     },
 ]
 
+# Database path - поддерживает как локальную разработку, так и Docker
+db_path = os.getenv('DATABASE_PATH')
+if db_path:
+    db_name = db_path
+else:
+    db_name = BASE_DIR.parent.parent / 'databases' / 'user.db'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR.parent.parent / 'databases' / 'user.db',
+        'NAME': db_name,
     }
 }
 

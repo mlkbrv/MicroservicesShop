@@ -58,10 +58,17 @@ TEMPLATES = [
     },
 ]
 
+# Database path - поддерживает как локальную разработку, так и Docker
+db_path = os.getenv('DATABASE_PATH')
+if db_path:
+    db_name = db_path
+else:
+    db_name = BASE_DIR.parent.parent / 'databases' / 'product.db'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR.parent.parent / 'databases' / 'product.db',
+        'NAME': db_name,
     }
 }
 
@@ -93,6 +100,6 @@ USE_TZ = True
 STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-REDIS_HOST = 'localhost'
-REDIS_PORT = 6379
-REDIS_DB = 0
+REDIS_HOST = os.getenv('REDIS_HOST', 'localhost')
+REDIS_PORT = int(os.getenv('REDIS_PORT', '6379'))
+REDIS_DB = int(os.getenv('REDIS_DB', '0'))

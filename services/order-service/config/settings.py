@@ -58,10 +58,17 @@ TEMPLATES = [
     },
 ]
 
+# Database path - поддерживает как локальную разработку, так и Docker
+db_path = os.getenv('DATABASE_PATH')
+if db_path:
+    db_name = db_path
+else:
+    db_name = BASE_DIR.parent.parent / 'databases' / 'order.db'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR.parent.parent / 'databases' / 'order.db',
+        'NAME': db_name,
     }
 }
 
@@ -94,11 +101,11 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Service URLs
-PRODUCT_SERVICE_URL = 'http://localhost:8001'
-CART_SERVICE_URL = 'http://localhost:8002'
-USER_SERVICE_URL = 'http://localhost:8004'
+PRODUCT_SERVICE_URL = os.getenv('PRODUCT_SERVICE_URL', 'http://localhost:8001')
+CART_SERVICE_URL = os.getenv('CART_SERVICE_URL', 'http://localhost:8002')
+USER_SERVICE_URL = os.getenv('USER_SERVICE_URL', 'http://localhost:8004')
 
 # Redis settings
-REDIS_HOST = 'localhost'
-REDIS_PORT = 6379
-REDIS_DB = 0
+REDIS_HOST = os.getenv('REDIS_HOST', 'localhost')
+REDIS_PORT = int(os.getenv('REDIS_PORT', '6379'))
+REDIS_DB = int(os.getenv('REDIS_DB', '0'))
